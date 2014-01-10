@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:socket="http://www.eyugame.com/common/socket"
+	xmlns:protocol="http://www.eyugame.com/common/protocol"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+http://www.eyugame.com/common/protocol http://www.eyugame.com/common/protocol/protocol-3.0.xsd
+http://www.eyugame.com/common/socket http://www.eyugame.com/common/socket/socket-3.0.xsd">
+
+
+
+	<!-- 会话管理器 -->
+	<bean id="sessionManager"
+		class="com.eyu.common.socket.filter.session.SessionManagerFilter">
+		<property name="handlerName" value="server-handler" />
+	</bean>
+
+	<!-- 解码器配置 -->
+	<bean id="coder" class="com.eyu.common.socket.codec.ProtocolCoder" />
+	<protocol:config id="protocol">
+		<protocol:class index="1"
+			name="com.eyu.common.utils.model.Result" />
+		<protocol:class index="2" name="com.eyu.common.utils.model.Page" />
+	</protocol:config>
+	<bean id="jsonCoder" class="com.eyu.common.socket.codec.JsonCoder" />
+
+	<!-- 通信服务器配置(管理后台自身) -->
+	<socket:server id="server" config="classpath:server.properties">
+		<!-- <socket:acceptor class="org.apache.mina.transport.socket.nio.NioSocketAcceptor" 
+			/> -->
+		<socket:acceptor class="io.netty.channel.socket.nio.NioServerSocketChannel" />
+		<socket:filters>
+			<socket:filter name="session" ref="sessionManager" />
+		</socket:filters>
+		<socket:coders>
+			<socket:coder format="0" ref="coder" />
+		</socket:coders>
+		<socket:commands scan-beans="true">
+		</socket:commands>
+	</socket:server>
+
+	<!-- 连接游戏服的Socket客户端 -->
+	<socket:client-factory id="client"
+		config="classpath:client.properties">
+		<socket:filters />
+		<socket:coders>
+			<socket:coder format="0" ref="coder" />
+			<socket:coder format="1" ref="jsonCoder" />
+		</socket:coders>
+		<socket:commands scan-beans="false">
+		  <socket:interface name="com.eyu.snm.inf.module.log.facade.MisLogFacade" /> 
+		 <socket:interface name="com.eyu.snm.inf.module.data.charge.facade.MisChargeFacade" /> 
+		  <socket:interface name="com.eyu.snm.inf.module.summary.facade.MisSummaryFacade" /> 
+		</socket:commands>
+	</socket:client-factory>
+
+</beans>
