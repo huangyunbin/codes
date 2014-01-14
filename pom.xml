@@ -7,6 +7,12 @@
 	<name>codes</name>
 	<description>codes</description>
 
+	<properties>
+		<guava.version>13.0</guava.version>
+		<commons.lang.version>2.6</commons.lang.version>
+	</properties>
+
+
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -25,6 +31,7 @@
 	<dependencies>
 
 
+
 		<!-- TEST -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -32,5 +39,47 @@
 			<version>4.10</version>
 			<scope>test</scope>
 		</dependency>
+
+
+		<!-- Logging -->
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.15</version>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.mail</groupId>
+					<artifactId>mail</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>javax.jms</groupId>
+					<artifactId>jms</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+
+		<!-- utility -->
+		<!-- ============================================ -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${guava.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons.lang.version}</version>
+		</dependency>
+
+
 	</dependencies>
 </project>
